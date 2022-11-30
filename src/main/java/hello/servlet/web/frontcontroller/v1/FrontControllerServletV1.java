@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(name = "frontControllerServletV1", urlPatterns = "/front-controller/v1/*")
+@WebServlet(name = "frontControllerServletV1", urlPatterns = "/front-controller/v1/*") // /front-controller/v1 를 포함한 하위 모든 요청은 이 서블릿에서 받아들인다.
 public class FrontControllerServletV1 extends HttpServlet {
 
     private Map<String, ControllerV1> controllerMap = new HashMap<>();
@@ -23,10 +23,12 @@ public class FrontControllerServletV1 extends HttpServlet {
         controllerMap.put("/front-controller/v1/members", new MemberListControllerV1());
     }
 
+    // [먼저 requestURI 를 조회해서 실제 호출할 컨트롤러를 controllerMap 에서 찾음]
+    // [없다면 404(SC_NOT_FOUND) 상태 코드를 반환]
+    // [컨트롤러를 찾고 controller.process(request, response); 을 호출해서 해당 컨트롤러를 실행]
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        System.out.println("FrontControllerServletV1.service");
 
         // /front-controller/v1/members
         String requestURI = request.getRequestURI();
